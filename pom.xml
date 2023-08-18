@@ -13,6 +13,7 @@
         <module>superz-core</module>
         <module>superz-jdbc</module>
         <module>superz-data</module>
+        <module>superz-json</module>
     </modules>
 
     <properties>

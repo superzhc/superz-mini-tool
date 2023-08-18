@@ -4,101 +4,97 @@ import java.util.*;
 
 public class PrintUtils {
 
-//    public static void show(Map<String, ?>... maps) {
+
+//    public static <T> String print(String[] headers, List<T>[] data) {
+//        if (null == data) {
+//            return "暂无数据";
+//        }
+//
+//        if (null == headers) {
+//            int headerLength = 0;
+//            for (List<T> item : data) {
+//                headerLength = Math.max(headerLength, item.size());
+//            }
+//
+//            headers = new ArrayList<>();
+//            for (int i = 0; i < headerLength; i++) {
+//                headers.add(String.format("C%d", i));
+//            }
+//        }
+//
+//        int columnSize = headers.size();
+//        int[] columnMaxLengths = new int[columnSize];
+//        String[] headerRow = new String[columnSize];
+//        for (int i = 0; i < columnSize; i++) {
+//            columnMaxLengths[i] = stringLength(headers.get(i));
+//            headerRow[i] = headers.get(i);
+//        }
+//
+//        List<String[]> rows = new ArrayList<>();
+//        for (int j = 0, rowNum = data.size(); j < rowNum; j++) {
+//            List<T> item = data.get(j);
+//            String[] row = new String[columnSize];
+//            for (int m = 0, len = Math.min(columnSize, item.size()); m < len; m++) {
+//                String value = String.valueOf(item.get(m));
+//                row[m] = value;
+//                columnMaxLengths[m] = Math.max(columnMaxLengths[m], (null == value ? 0 : stringLength(value)));
+//            }
+//            rows.add(row);
+//        }
+//
+//        StringBuilder result = new StringBuilder();
+//        result.append(printSeparator(columnMaxLengths)).append("\n");
+//        result.append(printRow(headerRow, columnMaxLengths)).append("\n");
+//        result.append(printSeparator(columnMaxLengths)).append("\n");
+//        for (String[] row : rows) {
+//            result.append(printRow(row, columnMaxLengths)).append("\n");
+//        }
+//        result.append(printSeparator(columnMaxLengths)).append("\n");
+//
+//        result.append("展示数据条数：").append(data.size()).append("\n");
+//
+//        return result.toString();
+//    }
+
+    //    public static void show(Map<String, ?>... maps) {
 //        System.out.println(print(maps));
 //    }
 //
-//    public static void show(List<Map<String, ?>> maps) {
-//        System.out.println(print(maps));
-//    }
-//
-//    public static void show(List<Map<String, ?>> maps, int num) {
-//        System.out.println(print(maps, num));
-//    }
-//
-//    public static String print(Map<String, ?>... maps) {
-//        if (null == maps || maps.length == 0) {
-//            return null;
-//        }
-//
-//        List<Map<String, ?>> lst = new ArrayList<>();
-//        for (Map<String, ?> map : maps) {
-//            lst.add(map);
-//        }
-//        return print(lst);
-//    }
+    public static <T> void print(List<Map<String, T>> maps) {
+        print(maps, null == maps ? 0 : maps.size());
+    }
 
-//    /**
-//     * 打印所有数据
-//     *
-//     * @param maps
-//     * @return
-//     */
-//    public static String print(List<Map<String, ?>> maps) {
-//        return print(maps, maps.size());
-//    }
-
-    public static <T> String print(List<String> headers, List<List<T>> data) {
-        if (null == data) {
-            return "暂无数据";
+    /**
+     * 打印所有数据
+     *
+     * @param maps
+     * @return
+     */
+    public static <T> void print(List<Map<String, T>> maps, int limit) {
+        if (null == maps) {
+            print((Map<String, T>[]) null, limit);
+            return;
         }
 
-        if (null == headers) {
-            int headerLength = 0;
-            for (List<T> item : data) {
-                headerLength = Math.max(headerLength, item.size());
-            }
+        Map<String, T>[] arr = new Map[maps.size()];
+        print(maps.toArray(arr));
+    }
 
-            headers = new ArrayList<>();
-            for (int i = 0; i < headerLength; i++) {
-                headers.add(String.format("C%d", i));
-            }
-        }
-
-        int columnSize = headers.size();
-        int[] columnMaxLengths = new int[columnSize];
-        String[] headerRow = new String[columnSize];
-        for (int i = 0; i < columnSize; i++) {
-            columnMaxLengths[i] = stringLength(headers.get(i));
-            headerRow[i] = headers.get(i);
-        }
-
-        List<String[]> rows = new ArrayList<>();
-        for (int j = 0, rowNum = data.size(); j < rowNum; j++) {
-            List<T> item = data.get(j);
-            String[] row = new String[columnSize];
-            for (int m = 0, len = Math.min(columnSize, item.size()); m < len; m++) {
-                String value = String.valueOf(item.get(m));
-                row[m] = value;
-                columnMaxLengths[m] = Math.max(columnMaxLengths[m], (null == value ? 0 : stringLength(value)));
-            }
-            rows.add(row);
-        }
-
-        StringBuilder result = new StringBuilder();
-        result.append(printSeparator(columnMaxLengths)).append("\n");
-        result.append(printRow(headerRow, columnMaxLengths)).append("\n");
-        result.append(printSeparator(columnMaxLengths)).append("\n");
-        for (String[] row : rows) {
-            result.append(printRow(row, columnMaxLengths)).append("\n");
-        }
-        result.append(printSeparator(columnMaxLengths)).append("\n");
-
-        result.append("展示数据条数：").append(data.size()).append("\n");
-
-        return result.toString();
+    public static <T> void print(Map<String, T>... maps) {
+        print(maps, null == maps ? 0 : maps.length);
     }
 
     /**
      * 打印指定条数的数据
      *
      * @param maps
-     * @param num
+     * @param limit
      * @return
      */
-    public static String print(Map<String, ?>[] maps, int num) {
-        if (null == maps) {
-            return "暂无数据";
+    public static <T> void print(Map<String, T>[] maps, int limit) {
+        String out;
+        if (null == maps || maps.length == 0) {
+            out = "暂无数据";
         }
 
         // 获取所有的key
@@ -118,7 +114,7 @@ public class PrintUtils {
 
         List<String[]> rows = new ArrayList<>();
         for (int k = 0, mapsLength = maps.length; k < mapsLength; k++) {
-            if (k >= num) {
+            if (k >= limit) {
                 break;
             }
 
@@ -143,9 +139,10 @@ public class PrintUtils {
         }
         result.append(printSeparator(columnMaxLengths)).append("\n");
 
-        result.append("展示数据条数：" + num + "，数据总数：").append(maps.length).append("\n");
+        result.append("展示数据条数：" + limit + "，数据总数：").append(maps.length).append("\n");
 
-        return result.toString();
+        out = result.toString();
+        System.out.println(out);
     }
 
     private static String printRow(String[] row, int[] columnMaxLengths) {
